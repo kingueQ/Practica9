@@ -20,15 +20,21 @@ class MainActivity : AppCompatActivity() {
         var btnSave: Button =findViewById(R.id.save_button) as Button
         btnSave.setOnClickListener { saveMarkFromForm() }
 
-        userRef.addChildEventListener(object : ChildEventListener {
-            override fun onCancelled(databaseError: DatabaseError) {}
-            override fun onChildMoved(dataSnapshot: DataSnapshot, previousName: String?) {}
-            override fun onChildChanged(dataSnapshot: DataSnapshot, previousName: String?) {}
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+        userRef.addChildEventListener(object: ChildEventListener{
+            override fun onCancelled(error: DatabaseError) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
 
             override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
-                val usuario = dataSnapshot.getValue(User::class.java)
-                if(usuario != null) writeMark(usuario)
+                val value = dataSnapshot.getValue()
+
+                if (value is String) {
+                } else if (value is User) {
+                    val usuario = value
+
+                    if(usuario!=null) {writeMark(usuario)}
+                }
             }
         })
 
